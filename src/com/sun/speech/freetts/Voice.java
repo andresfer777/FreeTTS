@@ -756,7 +756,10 @@ public abstract class Voice implements UtteranceProcessor, Dumpable {
 	/** Shuts down the voice processing. */
 	public void deallocate() {
 		setLoaded(false);
-
+		/*utteranceProcessors cleaning in order to avoid a IllegalStateException
+		 * caused for a Syllable relation set.
+		 */
+		utteranceProcessors.close();
 		if (!externalAudioPlayer) {
 			if (audioPlayer != null) {
 				try {
@@ -769,7 +772,8 @@ public abstract class Voice implements UtteranceProcessor, Dumpable {
 		}
 
 		if (!externalOutputQueue) {
-			outputQueue.close();
+			/*prevention of IllegalStateException*/
+			//outputQueue.close();
 		}
 	}
 
